@@ -26,7 +26,7 @@ ROAD_Y = WINDOW_HEIGHT // 2
 SPACE_BETWEEN_CARS = 5
 
 # Quantidade inicial de carros na rua
-INITIAL_NUM_CARS = 1
+INITIAL_NUM_CARS = 5
 
 # Faixa de spawn dos novos carros (apenas no lado esquerdo da rua)
 SPAWN_LANE_X = ROAD_X + 1
@@ -52,8 +52,9 @@ def create_cars(num_cars, cars):
         overlapping = any(abs(car.y - y) < CAR_HEIGHT + SPACE_BETWEEN_CARS and car.x < SPAWN_LANE_X for car in cars)
 
         if not overlapping:
-            car = Car(SPAWN_LANE_X, y)
-            cars.append(car)
+            for num in range(INITIAL_NUM_CARS):
+                car = Car(SPAWN_LANE_X + (num * 30), y)
+                cars.append(car)
         else:
             break
 
