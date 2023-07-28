@@ -31,6 +31,9 @@ INITIAL_NUM_CARS = 5
 # Faixa de spawn dos novos carros (apenas no lado esquerdo da rua)
 SPAWN_LANE_X = ROAD_X + 1
 
+time_to_spawn = 0
+
+
 # Classe do carro
 class Car:
     def __init__(self, x, y):
@@ -45,18 +48,20 @@ class Car:
 
 # Função para criar carros aleatoriamente
 def create_cars(num_cars, cars):
-    while len(cars) < num_cars:
+    global time_to_spawn
+
+    if len(cars) < num_cars and time.time() > time_to_spawn:
         y = random.randint(ROAD_Y, ROAD_Y + ROAD_HEIGHT - CAR_HEIGHT)
 
         # Verifica se há espaço no spawn para criar um novo carro
         overlapping = any(abs(car.y - y) < CAR_HEIGHT + SPACE_BETWEEN_CARS and car.x < SPAWN_LANE_X for car in cars)
 
         if not overlapping:
-            for num in range(INITIAL_NUM_CARS):
-                car = Car(SPAWN_LANE_X + (num * 30), y)
-                cars.append(car)
-        else:
-            break
+            car = Car(SPAWN_LANE_X, y)
+            cars.append(car)
+
+            # Define o tempo de spawn para um curto intervalo após a criação do carro atual
+            time_to_spawn = time.time() + random.uniform(0.2, 0.3)
 
     return cars
 
